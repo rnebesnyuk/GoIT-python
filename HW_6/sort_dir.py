@@ -42,19 +42,6 @@ def folder_check(p):
         elif item.is_file():
             sorter_of_files(item)
 
-# def get_list_of_files(p):
-#     all_files = os.listdir(p)
-#     files_list = []
-#     for object in all_files:
-#         if object !='pictures'and object !='videos'and object !='documents'and object !='audios'and object !='archives':
-#             full_path = os.path.join(p, object)
-#             if os.path.isdir(full_path):
-#                 FOLDERS_TO_REMOVE.append(full_path)
-#                 files_list = files_list + get_list_of_files(full_path)
-#             else:
-#                 files_list.append(full_path)
-#     return files_list
-
 def sorter_of_files(p): 
     ext = p.suffix
     name = p.stem
