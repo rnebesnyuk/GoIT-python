@@ -1,8 +1,8 @@
 from pathlib import Path
 import os
-import sys
 import re
 import shutil
+import sys
 
 PIC_EXT = ['.jpeg', '.png', '.jpg', '.svg', '.gif', '.bmp']
 VID_EXT = ['.avi', '.mp4', '.mov', '.mkv']
@@ -47,7 +47,6 @@ def sorter_of_files(p):
     name = p.stem
     normalized_name = normalize(name)
     updated_path = p.rename(Path(p.parent, normalized_name + ext))
-    print(updated_path)
     if ext.casefold() in PIC_EXT:
         FILE_CATEGORIES['images'].append(normalized_name + ext)
         KNOWN_EXT.add(ext)
@@ -65,10 +64,11 @@ def sorter_of_files(p):
         KNOWN_EXT.add(ext)
         shutil.move(f'{p.parent}/{normalized_name}{ext}', f'{SORTING_FOLDER}/audio/{normalized_name}{ext}')
     elif ext.casefold() in ARCH_EXT:
-        FILE_CATEGORIES['archives'].append(normalized_name)
+        FILE_CATEGORIES['archives'].append(normalized_name + ext)
         KNOWN_EXT.add(ext)
-        shutil.unpack_archive(updated_path, f'{SORTING_FOLDER}/archives')
-        shutil.rmtree(p.parent)
+        os.mkdir(f'{SORTING_FOLDER}/archives/{normalized_name}')
+        shutil.unpack_archive(updated_path, f'{SORTING_FOLDER}/archives/{normalized_name}')
+        os.remove(updated_path)
     else:
         UNKNOWN_EXT.add(ext)
 
@@ -99,6 +99,6 @@ if __name__ == "__main__":
         folder_check(p)
         remove_empty_folders(p)
         print(f'Sorting completed')
-        print(f'{FILE_CATEGORIES}, Known extensions: {KNOWN_EXT}, Unknown extensions: {UNKNOWN_EXT}')
+        print(f'{FILE_CATEGORIES},\nKnown extensions: {KNOWN_EXT}, Unknown extensions: {UNKNOWN_EXT}')
     else:
         print("Path entered refers to not valid Directory or File, please provide a correct Directory path")
