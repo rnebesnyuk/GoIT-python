@@ -66,7 +66,8 @@ def sorter_of_files(p):
     elif ext.casefold() in ARCH_EXT:
         FILE_CATEGORIES['archives'].append(normalized_name + ext)
         KNOWN_EXT.add(ext)
-        os.mkdir(f'{SORTING_FOLDER}/archives/{normalized_name}')
+        if not os.path.exists(f'{SORTING_FOLDER}/archives/{normalized_name}'):
+            os.mkdir(f'{SORTING_FOLDER}/archives/{normalized_name}')
         shutil.unpack_archive(updated_path, f'{SORTING_FOLDER}/archives/{normalized_name}')
         os.remove(updated_path)
     else:
@@ -86,9 +87,11 @@ def remove_empty_folders(p):
     for item in p.iterdir():
         if item.is_dir():
             if len(os.listdir(item)) == 0 and item.name !='images'and item.name !='video'and item.name !='documents'and item.name !='audio'and item.name !='archives':
+                recheck_folder = (item.parent).parent
                 shutil.rmtree(item)
+                remove_empty_folders(recheck_folder)
             else:
-                remove_empty_folders(item)            
+                remove_empty_folders(item)           
 
 if __name__ == "__main__":
     p = Path(get_cmd_input())
