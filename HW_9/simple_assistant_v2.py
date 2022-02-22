@@ -58,34 +58,34 @@ def main():
         try:
             user_input = input("Input command: ")
             parced_msg=user_input.split()
-            for word in (action_commands+exit_commands):
-                if word.find(parced_msg[0]) == 0:
-                    cmd_words = word.split()
-                    user_cmd_len = len(cmd_words)
-                    if user_cmd_len == 2:
-                        word = ' '.join(parced_msg[:2])
+            if parced_msg[0] in (action_commands+exit_commands):
+                if parced_msg[0] in exit_commands:
+                    print(good_bye_handler())
+                    quit()
+                if parced_msg[0] in action_commands:
+                    func_arg = parced_msg[1:]
+                    if len(func_arg) == 0:
+                        print(commands_func[parced_msg[0]]())
+                        continue
                     else:
-                        word = parced_msg[0]
-                    if word in exit_commands:
-                        print(good_bye_handler())
-                        quit()
-                    elif word in action_commands:
-                        if user_cmd_len == 1:
-                            func_arg = parced_msg[1:]
-                            if len(func_arg) == 0:
-                                print(commands_func[word]())
-                            else:
-                                func_arg = ' '.join(func_arg)
-                                print(commands_func[word](func_arg))
-                        elif user_cmd_len == 2:
-                            func_arg = parced_msg[2:]
-                            if len(func_arg) == 0:
-                                print(commands_func[word]())
-                            else:
-                                func_arg = ' '.join(func_arg)
-                                print(commands_func[word](func_arg))
-                        else:
-                            print("Assistant does not recognize your command. Please input your request.")
+                        func_arg = ' '.join(func_arg)
+                        print(commands_func[parced_msg[0]](func_arg))
+                        continue
+            two_word_cmd = parced_msg[:2]
+            two_word_cmd = ' '.join(two_word_cmd)
+            if two_word_cmd in (action_commands+exit_commands):
+                if two_word_cmd in exit_commands:
+                    print(good_bye_handler())
+                    quit()
+                if two_word_cmd in action_commands:
+                    func_arg = parced_msg[2:]
+                    if len(func_arg) == 0:
+                        print(commands_func[two_word_cmd]())
+                    else:
+                        func_arg = ' '.join(func_arg)
+                        print(commands_func[two_word_cmd](func_arg))
+            else:
+                print("Assistant does not recognize your command. Please input your request.")
         except Exception:
             print("Please enter a valid command")
 
