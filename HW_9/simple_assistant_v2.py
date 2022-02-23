@@ -56,7 +56,7 @@ def good_bye_handler():
 def main():
     while True:
         try:
-            user_input = input("Input command: ")
+            user_input = input("Input command: ").casefold()
             parced_msg=user_input.split()
             if parced_msg[0] in (action_commands+exit_commands):
                 if parced_msg[0] in exit_commands:
