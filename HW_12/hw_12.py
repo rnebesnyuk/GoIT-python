@@ -181,7 +181,7 @@ rec3=book.find_record('anna')
 for i in book.iterator(2):
     print(i)
 book.save_to_file('book.bin')
-data = book.load_from_file('book.bin')
+data = book.load_from_file('book.bin') 
 print(book==data)
 for i in data.iterator(2):
     print(i) 
