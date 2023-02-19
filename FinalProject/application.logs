@@ -1,0 +1,15 @@
+2023-02-19 12:01:32,562 [INFO] - logger - load: Addressbook has been loaded!
+2023-02-19 12:09:00,946 [INFO] - logger - load: Addressbook has been loaded!
+2023-02-19 12:09:26,732 [INFO] - logger - save: Addressbook has been saved!
+2023-02-19 12:11:18,840 [INFO] - logger - remove: Contact testlog5 has been removed!
+2023-02-19 12:11:18,855 [INFO] - logger - save: Addressbook has been saved!
+2023-02-19 12:12:04,137 [INFO] - logger - remove: Contact testlog4 has been removed!
+2023-02-19 12:12:04,147 [INFO] - logger - save: Addressbook has been saved!
+2023-02-19 12:12:20,312 [INFO] - logger - remove: Contact testlog3 has been removed!
+2023-02-19 12:12:20,318 [INFO] - logger - save: Addressbook has been saved!
+2023-02-19 12:12:28,463 [INFO] - logger - remove: Contact testlog2 has been removed!
+2023-02-19 12:12:28,464 [INFO] - logger - save: Addressbook has been saved!
+2023-02-19 12:22:07,818 [INFO] - logger - load: Addressbook has been loaded!
+2023-02-19 12:22:37,593 [INFO] - logger - add: Contact testbl has been added.
+2023-02-19 12:22:37,595 [INFO] - logger - save: Addressbook has been saved!
+2023-02-19 12:39:33,154 [INFO] - logger - load: Addressbook has been loaded!
