@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 import platform
 import sys
+import logging
 
 import aiohttp
 import asyncio
@@ -9,64 +10,71 @@ import asyncio
 BASE_URL = "https://api.privatbank.ua/p24api/exchange_rates?json&date="
 
 
-async def request(url: str, session):
-        try:
-            async with session.get(url) as resp:
-                if resp.status == 200:
-                    result = await resp.json()
-                    outcome = []
-                    date_ = {}
-                    totaldict = {}
-                    currency = {}
-                    if result:
-                        date = result['date']
-                        data = result['exchangeRate']
-                        curr1, = list(filter(lambda el: el["currency"] == 'USD', data))
-                        curr2, = list(filter(lambda el: el["currency"] == 'EUR', data))
-                        currency['sale'] = curr1['saleRate']
-                        currency['purchase'] = curr1['purchaseRate']
-                        totaldict[curr1['currency']] = currency
-                        currency = {}
-                        currency['sale'] = curr2['saleRate']
-                        currency['purchase'] = curr2['purchaseRate']
-                        totaldict[curr2['currency']] = currency
-                        date_[date] = totaldict
-                        outcome.append(date_)
-                        return outcome
-                    return 'Not found'
-                else:
-                    print(f"Error status: {resp.status} for {url}")
-        except aiohttp.ClientConnectorError as err:
-            print(f'Connection error: {url}', str(err))
+async def request(url: str, session, currencies):
+    try:
+        async with session.get(url) as resp:
+            if resp.status == 200:
+                result = await resp.json()
+                return process_response(result, currencies)
+            else:
+                logging.error(f"Error status: {resp.status} for {url}")
+    except aiohttp.ClientConnectorError as err:
+        logging.error(f'Connection error: {url} {str(err)}')
+        return 'Not found'
+    
 
- 
+def process_response(result: dict, currencies):
+    outcome = []
+    if not result:
+        return 'Not found'
+    date = result['date']
+    data = result['exchangeRate']
+    currency_dict = {}
+    for currency in currencies or ['USD', 'EUR']:
+        currency_data = next(filter(lambda el: el["currency"] == currency.upper(), data), None)
+        if currency_data:
+            try:
+                currency_dict[currency.upper()] = {'sale': currency_data['saleRate'], 'purchase': currency_data['purchaseRate']}
+            except KeyError:
+                currency_dict[currency.upper()] = 'Not available'
+    outcome.append({date: currency_dict})
+    return outcome
+
+
 def get_links(days=None):
     urls = []
     today = datetime.now()
     work_URL = BASE_URL + today.strftime("%d.%m.%Y")
-    if days == None:
+    if days is None:
         urls.append(work_URL)
     else:
-        for _ in range((int(days)), 10):
+        for _ in range(min(int(days), 10)):
             work_URL = BASE_URL + today.strftime("%d.%m.%Y")
             urls.append(work_URL)
-            today = today - timedelta(days=1)
+            today -= timedelta(days=1)
     return urls
 
 
-
-async def main(urls):
+async def main(urls, currencies):
     async with aiohttp.ClientSession() as session:
-        result = [request(url, session) for url in urls]
-        return await asyncio.gather(*result)
+        tasks = [request(url, session, currencies) for url in urls]
+        results = await asyncio.gather(*tasks)
+        return results
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     if platform.system() == 'Windows':
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    def_cur = ['USD', 'EUR']
     if len(sys.argv) > 1:
-        r = asyncio.run(main(get_links((sys.argv[1]))))
-        print(r)
+        currencies = (def_cur + sys.argv[2:]) if len(sys.argv) > 2 else def_cur
+        results = asyncio.run(main(get_links(sys.argv[1]), currencies))
     else:
-        r = asyncio.run(main(get_links()))
-        print(r)
+        results = asyncio.run(main(get_links(), def_cur))
+    for item in results:
+        for date in item:
+            for key, value in date.items():
+                print(key)
+                print(value)
+                print("-------------------")
