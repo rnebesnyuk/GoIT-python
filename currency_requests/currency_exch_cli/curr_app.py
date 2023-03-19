@@ -37,6 +37,8 @@ def process_response(result: dict, currencies):
                 currency_dict[currency.upper()] = {'sale': currency_data['saleRate'], 'purchase': currency_data['purchaseRate']}
             except KeyError:
                 currency_dict[currency.upper()] = 'Not available'
+        else:
+            currency_dict[currency.upper()] = 'No such currency found'
     outcome.append({date: currency_dict})
     return outcome
 
