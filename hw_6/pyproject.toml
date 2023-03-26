@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "hw-6"
+version = "0.1.0"
+description = ""
+authors = ["rnebesnyuk <98305190+rnebesnyuk@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "hw_6"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+psycopg2 = "^2.9.5"
+faker = "^18.3.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
