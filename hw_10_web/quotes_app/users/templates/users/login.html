@@ -1,0 +1,26 @@
+{% extends 'quotes/base.html' %}
+
+{% block content %}
+<h1>{{title}}</h1>
+
+{% if messages %}
+{% for msg in messages %}
+<span class="alert {%if msg.tags %} alert-{{msg.tags}} {% endif %}" role="alert">{{msg}}</span>
+{% endfor %}
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}    
+
+    <div class="form-error">{{ form.non_field_errors }}</div>
+
+    {% for f in form %}
+    <p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>
+    <div class="form-error">{{ f.errors }}</div>
+    {% endfor %}
+
+
+    <button type="submit" class="btn btn-primary">Login</button>
+    <button type="reset" class="btn btn-info">Reset</button>
+</form>
+{% endblock %} 
