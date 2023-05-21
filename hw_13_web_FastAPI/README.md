@@ -46,7 +46,7 @@ CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=
 
 
-Запуск застосунку
+App start:
 
 uvicorn main:app --reload
 
