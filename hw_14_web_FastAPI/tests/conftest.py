@@ -10,7 +10,7 @@ from src.database.models import Base
 from src.database.db import get_db
 
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
@@ -51,4 +51,4 @@ def client(session):
 
 @pytest.fixture(scope="module")
 def user():
-    return {"username": "testuser", "email": "testuser@example.com", "password": "password"}
+    return {"username": "testuser", "email": "testuser@example.com", "password": "password", "confirmed": True}
